@@ -1,0 +1,21 @@
+name: DevSecOps reusable template
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: "Versión de Java que usará el proyecto"
+        required: false
+        type: string
+        default: "17"
+
+jobs:
+  verify-template:
+    name: Verify template invocation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Confirm reusable workflow
+        run: |
+          echo "El template reutilizable se ha ejecutado correctamente."
+          echo "Java solicitada: ${{ inputs.java-version }}"
