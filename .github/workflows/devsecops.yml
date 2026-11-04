@@ -19,3 +19,25 @@ jobs:
         run: |
           echo "El template reutilizable se ha ejecutado correctamente."
           echo "Java solicitada: ${{ inputs.java-version }}"
+
+  build-and-test:
+    name: Compile and test WebGoat
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download caller repository
+        uses: actions/checkout@v7
+
+      - name: Install Java
+        uses: actions/setup-java@v6
+        with: 
+          distribution: temurin
+          java-version: ${{inputs.java-version}}
+          cache: maven
+
+      - name: Compile
+        run: ./mvnw -B -ntp -DskipTests compile
+
+      - name: Tests
+        run: ./mvnw -B -ntp test
+
