@@ -7,7 +7,7 @@ on:
         description: "Versión de Java que usará el proyecto"
         required: false
         type: string
-        default: "17"
+        default: "25"
 
 jobs:
   verify-template:
