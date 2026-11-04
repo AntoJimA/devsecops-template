@@ -59,8 +59,6 @@ jobs:
             --config p/security-audit \
             --json \
             --output reports/semgrep.json \
-
-            - name: Publish Semgrep report
             
       - name: Publicamos resultados
         uses: actions/upload-artifact@v7
