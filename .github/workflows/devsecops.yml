@@ -41,7 +41,7 @@ jobs:
       - name: Tests
         run: ./mvnw -B -ntp test
 
-  sast-semgrep:
+    sast-semgrep:
     name: SAST with Semgrep
     runs-on: ubuntu-latest
 
@@ -55,31 +55,27 @@ jobs:
       - name: Run Semgrep
         run: |
           mkdir -p reports
-          semgrep scan \
-            --config p/security-audit \
-            --json \
-            --output reports/semgrep.json \
+          semgrep scan --config p/security-audit --json --output reports/semgrep.json .
 
-      - name: Publicamos resultados
+      - name: Publish Semgrep report
         uses: actions/upload-artifact@v7
         with:
           name: semgrep-report
           path: reports/semgrep.json
           if-no-files-found: error
 
-    secret-scan:
-      name: Secret Scanning with Trufflehog
-      runs-on: ubuntu-latest
+  secret-scan:
+    name: Secret scanning with TruffleHog
+    runs-on: ubuntu-latest
 
-      steps:
+    steps:
+      - name: Download full repository history
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
-        - name: Download full repository history
-          uses: actions/checkout@v6
-          with:
-              fetch-depth: 0
-
-        - name: Scan repository history
-          run: |
+      - name: Scan repository history
+        run: |
           mkdir -p reports
           set -o pipefail
           docker run --rm \
@@ -87,13 +83,13 @@ jobs:
             trufflesecurity/trufflehog:latest \
             git file:///src --json \
             | jq 'del(.Raw)' > reports/trufflehog.jsonl
-          
-        - name: Publish Trufflehog report
-          uses: actions/upload-artifact@v7
-          with:
-            name: trufflehog-report
-            path: reports/trufflehog.jsonñ
-            if-no-files-found: error
+
+      - name: Publish TruffleHog report
+        uses: actions/upload-artifact@v7
+        with:
+          name: trufflehog-report
+          path: reports/trufflehog.jsonl
+          if-no-files-found: error
 
 
 
