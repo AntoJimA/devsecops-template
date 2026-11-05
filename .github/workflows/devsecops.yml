@@ -91,7 +91,7 @@ jobs:
           path: reports/trufflehog.jsonl
           if-no-files-found: error
   
-    sca-dependency-check:
+  sca-dependency-check:
     name: SCA with OWASP Dependency-Check
     runs-on: ubuntu-latest
 
