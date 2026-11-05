@@ -115,6 +115,35 @@ jobs:
           name: dependency-check-report
           path: reports/dependency-check
           if-no-files-found: warn
+  
+  iac-kics:
+    name: IaC scannning with KICS
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Download Repository
+      - uses: actions/checkout@v7
+
+      - name: create report directory
+      - runs: mkdir -p reports/kicks
+
+      - name: Scan infrastructure definitions
+        uses: checkmarx/kics-github-action@v2.1.20
+        with:
+          path: .
+          output_path: reports/kics
+          output_name: kics-results
+          output_formats: json,html
+          ignore_on_exit: results
+          disable_secrets: true
+
+      - name: Publish KICS report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: kics-report
+          path: reports/kics
+          if-no-files-found: warn
 
 
 
