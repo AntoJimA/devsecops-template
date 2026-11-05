@@ -90,6 +90,34 @@ jobs:
           name: trufflehog-report
           path: reports/trufflehog.jsonl
           if-no-files-found: error
+  
+  sca-dependency-check:
+    name: SCA with OWASP Dependency-Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download caller repository
+      - uses: actions/checkout@v7
+
+      - name: Scan dependencies
+        uses: dependency-check/Dependency-Check_Action@main
+        with: 
+          project: Webgoat
+          path: .
+          format:  HTML
+          out: reports/dependency-check
+          args: --enableRetired
+
+      - name: Publish Dependency-Check report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependency-check-report
+          path: reports/dependency-check
+          if-no-files-found: warn
+
+
+
 
 
 
