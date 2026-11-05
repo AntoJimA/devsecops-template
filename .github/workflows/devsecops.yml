@@ -122,10 +122,10 @@ jobs:
 
     steps: 
       - name: Download Repository
-      - uses: actions/checkout@v7
+        uses: actions/checkout@v7
 
       - name: create report directory
-      - run: mkdir -p reports/kicks
+        run: mkdir -p reports/kicks
 
       - name: Scan infrastructure definitions
         uses: checkmarx/kics-github-action@v2.1.20
