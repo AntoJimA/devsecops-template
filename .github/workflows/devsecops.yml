@@ -152,6 +152,16 @@ jobs:
       - name: Descarga de repositorio
         uses: actions/checkout@v7
 
+      - name: Install Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{inputs.java-version}}
+          cache: maven
+
+      - name: Package WebGoat for Docker
+        run: ./mvwn -B -ntp -DskipTests package 
+
       - name: Build image from docker file
         run: docker build --tag webgoat:${{github.sha}} .
 
