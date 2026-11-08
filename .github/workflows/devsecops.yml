@@ -153,7 +153,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Build image from docker file
-        run: docker build -tag webgoat:${{github.sha}} .
+        run: docker build --tag webgoat:${{github.sha}} .
 
       - name: Create report directory
         run: mkdir -p reports
