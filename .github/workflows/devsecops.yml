@@ -160,8 +160,8 @@ jobs:
           cache: maven
 
       - name: Package WebGoat for Docker
-        run: ./mvwn -B -ntp -DskipTests package 
-
+        run: ./mvnw -B -ntp -DskipTests package
+        
       - name: Build image from docker file
         run: docker build --tag webgoat:${{github.sha}} .
 
