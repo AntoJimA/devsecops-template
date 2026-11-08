@@ -144,6 +144,39 @@ jobs:
           name: kics-report
           path: reports/kics
           if-no-files-found: warn
+  build-and-scan-image:
+    name: Build and scan Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descarga de repositorio
+        uses: actions/checkout@v7
+
+      - name: Build image from docker file
+        run: docker build -t webgoat:${{github.sha}}
+
+      - name: Create report directory
+        run: mkdir -p reports
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with: 
+          image-ref: webgoat:${{ github.sha }}
+          format: json
+          output: reports/trivy-image.json
+          severity: HIGH,CRITICAL
+          vuln-type: os,library
+          ignore-unfixed: true
+          scanners: vuln
+          exit-code: 0
+
+      - name: Publish Trivy report
+        uses: actions/upload-artifacts@v7
+        with:
+          name: trivy-image-report
+          path: reports/trivy-image.json
+          if-no-files-found: error
+
 
 
 
