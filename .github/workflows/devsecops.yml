@@ -169,17 +169,18 @@ jobs:
         run: mkdir -p reports
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
-        with:
-          version: v0.69.3
-          image-ref: webgoat:${{ github.sha }}
-          format: json
-          output: reports/trivy-image.json
-          severity: HIGH,CRITICAL
-          vuln-type: os,library
-          ignore-unfixed: true
-          scanners: vuln
-          exit-code: 0
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            ghcr.io/aquasecurity/trivy:0.69.3@sha256:7228e304ae0f610a1fad937baa463598cadac0c2ac4027cc68f3a8b997115689 \
+            image \
+            --format json \
+            --output /workspace/reports/trivy-image.json \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            --scanners vuln \
+            webgoat:${{ github.sha }}
 
       - name: Publish Trivy report
         uses: actions/upload-artifact@v7
